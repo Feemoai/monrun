@@ -1,65 +1,112 @@
-import Image from "next/image";
+'use client';
+import { useDevice }          from '@/lib/hooks/useDevice';
+import { useHistory }         from '@/lib/hooks/useHistory';
+import { WeatherHeader }      from '@/components/dashboard/WeatherHeader';
+import { DeviceStatusBar }    from '@/components/dashboard/DeviceStatusBar';
+import { RoomCard }           from '@/components/dashboard/RoomCard';
+import { ChartPanel }         from '@/components/dashboard/ChartPanel';
+import { InsightsPanel }      from '@/components/dashboard/InsightsPanel';
+import type { RoomId, HistoryEntry } from '@/types';
 
-export default function Home() {
+const ROOM_IDS: RoomId[] = ['A', 'B', 'C'];
+
+function Skeleton({ className }: { className?: string }) {
+  return <div className={`animate-pulse bg-white/[0.04] rounded-2xl ${className}`} />;
+}
+
+export default function DashboardPage() {
+  const { data, loading, error, isOnline } = useDevice();
+  const { history }                        = useHistory(40);
+
+  if (error) {
+    return (
+      <div className="flex h-full items-center justify-center p-8">
+        <div className="glass-card px-8 py-6 text-center max-w-sm">
+          <p className="text-red-400 text-sm font-semibold mb-1">Gagal memuat data</p>
+          <p className="text-white/30 text-xs">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="p-6 space-y-4">
+
+      {/* ① Weather Header */}
+      {loading
+        ? <Skeleton className="h-36" />
+        : <WeatherHeader weather={data?.weather ?? null} />
+      }
+
+      {/* ② Device Status Bar */}
+      {!loading && data && (
+        <DeviceStatusBar data={data} isOnline={isOnline} />
+      )}
+
+      {/* Page title */}
+      <div className="flex items-center justify-between pt-1">
+        <div>
+          <h1 className="text-lg font-bold text-white">Monitoring Ruangan</h1>
+          <p className="text-xs text-white/30 mt-0.5">Data sensor real-time · 3 ruangan</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        {!loading && data && (
+          <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border ${
+            isOnline
+              ? 'bg-emerald-500/8 border-emerald-500/20 text-emerald-400'
+              : 'bg-red-500/8 border-red-500/20 text-red-400'
+          }`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${isOnline ? 'bg-emerald-400 animate-pulse' : 'bg-red-400'}`} />
+            {isOnline ? 'Live' : 'Offline'}
+          </div>
+        )}
+      </div>
+
+      {/* ③ Room Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {loading
+          ? ROOM_IDS.map((id) => <Skeleton key={id} className="h-56" />)
+          : data
+          ? ROOM_IDS.map((id) => {
+              const meta = data.rooms?.[id];
+              // Gunakan rooms[id].latest untuk data per-room yang independen
+              // Fallback ke history terbaru jika latest belum ada
+              const fromMeta = meta?.latest
+                ? ({ ...meta.latest, room: id } as HistoryEntry)
+                : undefined;
+              const fromHistory = history.find((h) => h.room === id);
+              const latestEntry = fromMeta ?? fromHistory;
+
+              return (
+                <RoomCard
+                  key={id}
+                  roomId={id}
+                  meta={meta ?? { label: `Ruangan ${id}`, description: '', icon: 'school' }}
+                  latest={latestEntry}
+                  // isActive driven oleh data.activeRoom (bukan data.latest.room)
+                  isActive={data.activeRoom === id}
+                />
+              );
+            })
+          : null
+        }
+      </div>
+
+      {/* ④ Chart + Insights */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="lg:col-span-2">
+          {loading
+            ? <Skeleton className="h-72" />
+            : <ChartPanel history={history} />
+          }
         </div>
-      </main>
+        <div>
+          {loading
+            ? <Skeleton className="h-72" />
+            : data && <InsightsPanel data={data} history={history} />
+          }
+        </div>
+      </div>
+
     </div>
   );
 }

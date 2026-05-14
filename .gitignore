@@ -30,8 +30,19 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# ── SECURITY: Jangan pernah commit file ini ──────────────────────
+# Env files (berisi Firebase keys, API keys)
+.env
+.env.local
+.env.*.local
+.env.production
+
+# Firebase service account (jika pakai Firebase Admin SDK)
+*-service-account*.json
+firebase-adminsdk*.json
+
+# Seed script (berisi config Firebase hardcoded untuk testing)
+scripts/seed-firebase.mjs
 
 # vercel
 .vercel
