@@ -9,10 +9,10 @@ import {
 } from 'lucide-react';
 
 const NAV = [
-  { href: '/',        label: 'Dashboard',   icon: LayoutDashboard },
-  { href: '/history', label: 'History',     icon: History         },
-  { href: '/export',  label: 'Export Data', icon: Download        },
-  { href: '/ai',      label: 'Monrun AI',   icon: Sparkles        },
+  { href: '/',        label: 'Dashboard',    icon: LayoutDashboard },
+  { href: '/history', label: 'History',      icon: History         },
+  { href: '/export',  label: 'Export Data',  icon: Download        },
+  { href: '/ai',      label: 'FORSENCE AI',  icon: Sparkles        },
 ];
 
 // ── Isi nav (shared antara desktop & mobile drawer) ──────────────
@@ -38,7 +38,7 @@ function NavItems({ onClose }: { onClose?: () => void }) {
               <Icon className="w-4 h-4 shrink-0" />
               <span className="font-medium">{label}</span>
               {active && <ChevronRight className="w-3 h-3 ml-auto text-cyan-400/60" />}
-              {label === 'Monrun AI' && !active && (
+              {label === 'FORSENCE AI' && !active && (
                 <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30 font-medium">
                   AI
                 </span>
@@ -58,7 +58,7 @@ function Logo() {
         <Cpu className="w-4 h-4 text-cyan-400" />
       </div>
       <div>
-        <p className="text-sm font-semibold text-white">Monrun</p>
+        <p className="text-sm font-semibold text-white">FORSENCE</p>
         <p className="text-[10px] text-white/40 leading-none">IoT Dashboard</p>
       </div>
     </div>

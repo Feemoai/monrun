@@ -140,8 +140,8 @@ export function Chatbot() {
             <Sparkles className="w-4 h-4 text-purple-400" />
           </div>
           <div>
-            <h1 className="text-sm font-semibold text-white">Monrun AI</h1>
-            <p className="text-[10px] text-white/30">Powered by OpenRouter · Ring 2.6</p>
+            <h1 className="text-sm font-semibold text-white">FORSENCE AI</h1>
+            <p className="text-[10px] text-white/30">Powered by OpenRouter · Ring 2.6 � FORSENCE</p>
           </div>
         </div>
         {messages.length > 0 && (
@@ -167,7 +167,7 @@ export function Chatbot() {
             <div className="w-16 h-16 rounded-2xl bg-purple-500/15 border border-purple-500/25 flex items-center justify-center mb-4">
               <Sparkles className="w-8 h-8 text-purple-400" />
             </div>
-            <h2 className="text-lg font-bold text-white mb-2">Monrun AI</h2>
+            <h2 className="text-lg font-bold text-white mb-2">FORSENCE AI</h2>
             <p className="text-sm text-white/40 max-w-xs mb-8">
               Asisten AI untuk sistem monitoring ruangan ESP32. Tanya apa saja!
             </p>
