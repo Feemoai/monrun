@@ -25,13 +25,7 @@ export function ExportPanel({ history }: Props) {
   const filename = `forsence_room${room}_${from||'all'}_${to||'now'}`;
 
   return (
-    <div className="max-w-xl mx-auto space-y-6">
-      <div>
-        <h2 className="text-lg font-semibold text-white">Export Data</h2>
-        <p className="text-sm text-white/40 mt-1">
-          Filter dan download data sensor ke CSV atau JSON
-        </p>
-      </div>
+    <div className="max-w-xl space-y-6">
 
       <div className="glass-card p-5 space-y-4">
         {/* Room */}
