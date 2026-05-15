@@ -26,7 +26,7 @@ interface Props {
 
 export function RoomCard({ roomId, meta, latest, isActive }: Props) {
   const [editing, setEditing]   = useState(false);
-  const [draft,   setDraft]     = useState(meta.description);
+  const [draft,   setDraft]     = useState(meta.description ?? '');
   const [saving,  setSaving]    = useState(false);
   const comfort = latest?.comfort as ComfortLevel | undefined;
 
@@ -34,7 +34,7 @@ export function RoomCard({ roomId, meta, latest, isActive }: Props) {
 
   const saveDescription = useCallback(async () => {
     const trimmed = draft.trim();
-    if (trimmed === meta.description) { setEditing(false); return; }
+    if (trimmed === (meta.description ?? '')) { setEditing(false); return; }
     if (!trimmed) { setError('Deskripsi tidak boleh kosong'); return; }
     setSaving(true);
     setError(null);
@@ -50,7 +50,7 @@ export function RoomCard({ roomId, meta, latest, isActive }: Props) {
   }, [draft, meta.description, roomId]);
 
   const cancelEdit = useCallback(() => {
-    setDraft(meta.description);
+    setDraft(meta.description ?? '');
     setError(null);
     setEditing(false);
   }, [meta.description]);
@@ -153,16 +153,21 @@ export function RoomCard({ roomId, meta, latest, isActive }: Props) {
                   key="view"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="flex items-center gap-1.5 group/desc"
+                  className="flex items-center gap-1.5 group/desc cursor-pointer"
+                  onClick={() => setEditing(true)}
+                  title="Klik untuk edit deskripsi"
                 >
-                  <p className="text-[11px] text-white/35 truncate">{meta.description}</p>
-                  <button
-                    onClick={() => setEditing(true)}
-                    className="opacity-0 group-hover/desc:opacity-100 transition-opacity p-0.5 rounded hover:text-cyan-400 text-white/30"
-                    title="Edit deskripsi"
-                  >
+                  <p className={`text-[11px] truncate ${
+                    meta.description
+                      ? 'text-white/35'
+                      : 'text-white/15 italic'
+                  }`}>
+                    {meta.description || 'Tambah deskripsi...'}
+                  </p>
+                  {/* Pensil: selalu terlihat di mobile (opacity-40), fade in di desktop */}
+                  <span className="opacity-40 md:opacity-0 group-hover/desc:opacity-100 transition-opacity p-0.5 rounded text-white/30 hover:text-cyan-400 shrink-0">
                     <Pencil className="w-2.5 h-2.5" />
-                  </button>
+                  </span>
                 </motion.div>
               )}
             </AnimatePresence>
