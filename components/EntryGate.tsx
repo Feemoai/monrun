@@ -9,7 +9,7 @@ const LETTERS = 'FORSENCE'.split('');
 
 // Baris status boot yang muncul satu per satu
 const BOOT_LINES = [
-  'SYS :: Initializing FORSENCE v2.4...',
+  'SYS :: Initializing FORSENCE v2.0...',
   'NET :: Connecting to Firebase RTDB...',
   'IOT :: ESP32 sensor handshake OK',
   'ENV :: Loading room configuration [A·B·C]',
@@ -185,7 +185,7 @@ export function EntryGate({ onEnter }: Props) {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1.0, duration: 0.6 }}
                 >
-                  ESP32 · Firebase · 3 Ruangan
+                  ESP32 · Firebase 
                 </motion.p>
               )}
             </AnimatePresence>
@@ -225,9 +225,9 @@ export function EntryGate({ onEnter }: Props) {
             animate={{ opacity: 1 }}
             transition={{ delay: 2.5 }}
           >
-            <span>FORSENCE</span>
+            <span>FORSENCE by Kelompok 5 TI-1B</span>
             <span className="w-1 h-1 rounded-full bg-white/15" />
-            <span>v2.4.0</span>
+            <span>v2.0</span>
             <span className="w-1 h-1 rounded-full bg-white/15" />
             <span>{new Date().getFullYear()}</span>
           </motion.div>
