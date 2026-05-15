@@ -2,6 +2,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Bot, User, Sparkles, Trash2, AlertCircle } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface Message {
   id:      string;
@@ -215,7 +217,34 @@ export function Chatbot() {
               }`}>
                 {msg.role === 'assistant' && !msg.content
                   ? <TypingDots />
-                  : <span className="whitespace-pre-wrap">{msg.content}</span>
+                  : (
+                    <div className="markdown-content">
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          p: ({node, ...props}) => <p className="mb-2 leading-relaxed last:mb-0" {...props} />,
+                          ul: ({node, ...props}) => <ul className="list-disc list-inside mb-2 space-y-1" {...props} />,
+                          ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-2 space-y-1" {...props} />,
+                          li: ({node, ...props}) => <li className="ml-1" {...props} />,
+                          strong: ({node, ...props}) => <strong className="font-semibold text-white" {...props} />,
+                          code: ({node, inline, className, children, ...props}: any) => 
+                            inline 
+                              ? <code className="bg-black/20 border border-white/5 rounded px-1.5 py-0.5 text-[11px] font-mono text-purple-300" {...props}>{children}</code>
+                              : <pre className="bg-black/30 border border-white/10 rounded-xl p-3 my-2 overflow-x-auto text-[11px] font-mono text-purple-300"><code {...props}>{children}</code></pre>,
+                          table: ({node, ...props}) => <div className="overflow-x-auto my-3 border border-white/10 rounded-lg"><table className="w-full text-left border-collapse text-xs" {...props} /></div>,
+                          thead: ({node, ...props}) => <thead className="bg-white/5" {...props} />,
+                          th: ({node, ...props}) => <th className="border-b border-white/10 p-2.5 font-semibold text-white whitespace-nowrap" {...props} />,
+                          td: ({node, ...props}) => <td className="border-b border-white/5 p-2.5 whitespace-nowrap" {...props} />,
+                          a: ({node, ...props}) => <a className="text-cyan-400 hover:text-cyan-300 underline underline-offset-2" target="_blank" rel="noopener noreferrer" {...props} />,
+                          h1: ({node, ...props}) => <h1 className="text-lg font-bold text-white mb-2 mt-4" {...props} />,
+                          h2: ({node, ...props}) => <h2 className="text-base font-bold text-white mb-2 mt-3" {...props} />,
+                          h3: ({node, ...props}) => <h3 className="text-sm font-bold text-white mb-2 mt-2" {...props} />,
+                        }}
+                      >
+                        {msg.content}
+                      </ReactMarkdown>
+                    </div>
+                  )
                 }
               </div>
               {msg.role === 'user' && (
