@@ -14,8 +14,11 @@ export default function HistoryPage() {
   const [errorMsg, setErrorMsg] = useState('');
 
   const handleClear = async () => {
-    if (confirmText !== 'DataFORSENCE') {
-      setErrorMsg('Teks konfirmasi salah!');
+    // Password statis untuk melindungi penghapusan (bisa diganti jika perlu)
+    const ADMIN_PASSWORD = 'FORSENCE';
+    
+    if (confirmText !== ADMIN_PASSWORD) {
+      setErrorMsg('Password salah! Penghapusan dibatalkan.');
       return;
     }
     
@@ -112,10 +115,10 @@ export default function HistoryPage() {
                   
                   <div className="bg-white/5 border border-white/10 rounded-xl p-4">
                     <label className="block text-xs font-medium text-white/50 mb-2">
-                      Ketik <span className="text-white font-mono select-all">DataFORSENCE</span> untuk mengonfirmasi:
+                      Masukkan Password Admin untuk mengonfirmasi:
                     </label>
                     <input
-                      type="text"
+                      type="password"
                       autoFocus
                       value={confirmText}
                       onChange={(e) => {
@@ -123,8 +126,8 @@ export default function HistoryPage() {
                         setErrorMsg('');
                       }}
                       disabled={clearing}
-                      className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white outline-none focus:border-red-500/50 transition-colors placeholder:text-white/20 font-mono"
-                      placeholder="DataFORSENCE"
+                      className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white outline-none focus:border-red-500/50 transition-colors placeholder:text-white/20 font-mono tracking-widest"
+                      placeholder="••••••••"
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') handleClear();
                       }}
@@ -147,7 +150,7 @@ export default function HistoryPage() {
                   </button>
                   <button
                     onClick={handleClear}
-                    disabled={clearing || confirmText !== 'DataFORSENCE'}
+                    disabled={clearing || !confirmText}
                     className="flex items-center gap-2 px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {clearing ? (
