@@ -3,6 +3,7 @@ import { useState, useMemo } from 'react';
 import { Download, FileText, FileJson, FileType } from 'lucide-react';
 import type { HistoryEntry, RoomId } from '@/types';
 import { downloadCSV, downloadJSON, downloadPDF, filterByDateRange } from '@/lib/utils/export';
+import { useDevice } from '@/lib/hooks/useDevice';
 
 const ROOMS: Array<RoomId | 'ALL'> = ['ALL', 'A', 'B', 'C'];
 
@@ -12,6 +13,7 @@ export function ExportPanel({ history }: Props) {
   const [room, setRoom] = useState<RoomId | 'ALL'>('ALL');
   const [from, setFrom] = useState('');
   const [to, setTo]     = useState('');
+  const { data: deviceData } = useDevice();
 
   const filtered = useMemo(() =>
     filterByDateRange(
@@ -84,7 +86,7 @@ export function ExportPanel({ history }: Props) {
         <div className="flex flex-col gap-3">
           {/* Laporan Utama (PDF) */}
           <button
-            onClick={() => downloadPDF(filtered, `${filename}.pdf`)}
+            onClick={() => downloadPDF(filtered, `${filename}.pdf`, deviceData, room)}
             disabled={filtered.length === 0}
             className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl
               bg-red-500 hover:bg-red-600 text-white text-sm font-bold shadow-lg shadow-red-500/20
