@@ -81,37 +81,42 @@ export function ExportPanel({ history }: Props) {
         </div>
 
         {/* Export buttons */}
-        <div className="flex flex-wrap gap-3">
-          <button
-            onClick={() => downloadCSV(filtered, `${filename}.csv`)}
-            disabled={filtered.length === 0}
-            className="flex-1 min-w-[120px] flex items-center justify-center gap-2 py-2.5 rounded-xl
-              bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium
-              hover:bg-emerald-500/20 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            <FileText className="w-4 h-4" />
-            CSV
-          </button>
-          <button
-            onClick={() => downloadJSON(filtered, `${filename}.json`)}
-            disabled={filtered.length === 0}
-            className="flex-1 min-w-[120px] flex items-center justify-center gap-2 py-2.5 rounded-xl
-              bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium
-              hover:bg-blue-500/20 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            <FileJson className="w-4 h-4" />
-            JSON
-          </button>
+        <div className="flex flex-col gap-3">
+          {/* Laporan Utama (PDF) */}
           <button
             onClick={() => downloadPDF(filtered, `${filename}.pdf`)}
             disabled={filtered.length === 0}
-            className="flex-1 min-w-[120px] flex items-center justify-center gap-2 py-2.5 rounded-xl
-              bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-medium
-              hover:bg-red-500/20 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl
+              bg-red-500 hover:bg-red-600 text-white text-sm font-bold shadow-lg shadow-red-500/20
+              transition-all disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            <FileType className="w-4 h-4" />
-            PDF
+            <FileType className="w-5 h-5" />
+            Download Laporan PDF
           </button>
+
+          {/* Format Data Mentah */}
+          <div className="flex gap-3">
+            <button
+              onClick={() => downloadCSV(filtered, `${filename}.csv`)}
+              disabled={filtered.length === 0}
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl
+                bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium
+                hover:bg-emerald-500/20 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <FileText className="w-4 h-4" />
+              Data CSV
+            </button>
+            <button
+              onClick={() => downloadJSON(filtered, `${filename}.json`)}
+              disabled={filtered.length === 0}
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl
+                bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium
+                hover:bg-blue-500/20 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <FileJson className="w-4 h-4" />
+              Data JSON
+            </button>
+          </div>
         </div>
       </div>
     </div>
